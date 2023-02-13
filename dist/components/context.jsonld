@@ -1,0 +1,21 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/componentsjs/^5.0.0/components/context.jsonld",
+    {
+      "npmd": "https://linkedsoftwaredependencies.org/bundles/npm/",
+      "sss": "npmd:ldes-solid-sparql-server/^0.0.0/",
+      "SparqlStore": {
+        "@id": "sss:dist/sparqlstore.jsonld#SparqlStore",
+        "@prefix": true,
+        "@context": {
+          "pageSize": {
+            "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_pageSize"
+          },
+          "url": {
+            "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_url"
+          }
+        }
+      }
+    }
+  ]
+}

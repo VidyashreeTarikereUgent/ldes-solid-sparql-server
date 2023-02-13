@@ -1,0 +1,11 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/ldes-solid-sparql-server/^0.0.0/components/context.jsonld"
+  ],
+  "@id": "npmd:ldes-solid-sparql-server",
+  "@type": "Module",
+  "requireName": "ldes-solid-sparql-server",
+  "import": [
+    "sss:dist/sparqlstore.jsonld"
+  ]
+}

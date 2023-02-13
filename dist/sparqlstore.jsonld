@@ -1,0 +1,93 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/ldes-solid-sparql-server/^0.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@solid/community-server/^5.0.0/components/context.jsonld"
+  ],
+  "@id": "npmd:ldes-solid-sparql-server",
+  "components": [
+    {
+      "@id": "sss:dist/sparqlstore.jsonld#SparqlStore",
+      "@type": "Class",
+      "requireElement": "SparqlStore",
+      "extends": [
+        "css:dist/storage/ResourceStore.jsonld#ResourceStore"
+      ],
+      "parameters": [
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_pageSize",
+          "range": "xsd:number"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_url",
+          "range": "xsd:string"
+        }
+      ],
+      "memberFields": [
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore__member_fetcher",
+          "memberFieldName": "fetcher",
+          "range": "sss:dist/Fetcher.jsonld#Fetcher"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore__member_pageSize",
+          "memberFieldName": "pageSize",
+          "range": "xsd:number"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore__member_constructor",
+          "memberFieldName": "constructor"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore__member_getRepresentation",
+          "memberFieldName": "getRepresentation",
+          "range": {
+            "@type": "ParameterRangeWildcard"
+          }
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore__member_setRepresentation",
+          "memberFieldName": "setRepresentation",
+          "range": {
+            "@type": "ParameterRangeWildcard"
+          }
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore__member_addResource",
+          "memberFieldName": "addResource",
+          "range": {
+            "@type": "ParameterRangeWildcard"
+          }
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore__member_deleteResource",
+          "memberFieldName": "deleteResource",
+          "range": {
+            "@type": "ParameterRangeWildcard"
+          }
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore__member_modifyResource",
+          "memberFieldName": "modifyResource",
+          "range": {
+            "@type": "ParameterRangeWildcard"
+          }
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore__member_hasResource",
+          "memberFieldName": "hasResource",
+          "range": {
+            "@type": "ParameterRangeWildcard"
+          }
+        }
+      ],
+      "constructorArguments": [
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_pageSize"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_url"
+        }
+      ]
+    }
+  ]
+}
