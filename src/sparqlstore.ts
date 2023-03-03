@@ -57,8 +57,6 @@ export class SparqlStore implements ResourceStore {
         this.pageSize = pageSize;
         this.host = host + path;
 
-        console.log("i am here", this.host, host, path)
-
         const queryString = readFileSync(queryFileLocation).toString();
         const metadataString = readFileSync(metadataLocation).toString();
         const metadataQuads = new Parser().parse(metadataString);

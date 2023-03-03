@@ -83,7 +83,6 @@ class SparqlStore {
         };
         this.pageSize = pageSize;
         this.host = host + path;
-        console.log("i am here", this.host, host, path);
         const queryString = (0, fs_1.readFileSync)(queryFileLocation).toString();
         const metadataString = (0, fs_1.readFileSync)(metadataLocation).toString();
         const metadataQuads = new n3_1.Parser().parse(metadataString);
