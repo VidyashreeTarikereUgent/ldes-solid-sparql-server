@@ -20,9 +20,52 @@
         {
           "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_url",
           "range": "xsd:string"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_queryFileLocation",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_metadataLocation",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_relationType",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_host",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_path",
+          "range": "xsd:string"
         }
       ],
       "memberFields": [
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore__member_host",
+          "memberFieldName": "host",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore__member_metadata",
+          "memberFieldName": "metadata",
+          "range": {
+            "@type": "ParameterRangeArray",
+            "parameterRangeValue": "urn:npm:@rdfjs/types:Quad"
+          }
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore__member_relationType",
+          "memberFieldName": "relationType",
+          "range": "xsd:string"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore__member_timetampPath",
+          "memberFieldName": "timetampPath",
+          "range": "xsd:string"
+        },
         {
           "@id": "sss:dist/sparqlstore.jsonld#SparqlStore__member_fetcher",
           "memberFieldName": "fetcher",
@@ -86,6 +129,21 @@
         },
         {
           "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_url"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_queryFileLocation"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_metadataLocation"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_relationType"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_host"
+        },
+        {
+          "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_path"
         }
       ]
     }

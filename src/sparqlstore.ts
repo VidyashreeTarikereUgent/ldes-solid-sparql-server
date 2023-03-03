@@ -1,5 +1,7 @@
-import { Quad, Quad_Object } from "@rdfjs/types";
-import { BasicRepresentation, ChangeMap, Conditions, CONTENT_TYPE, guardedStreamFrom, INTERNAL_QUADS, Patch, Representation, RepresentationMetadata, RepresentationPreferences, ResourceIdentifier, ResourceStore } from "@solid/community-server";
+import { Quad, Quad_Object, Term } from "@rdfjs/types";
+import { BasicRepresentation, ChangeMap, Conditions, CONTENT_TYPE, guardedStreamFrom, INTERNAL_QUADS, Patch, RdfPatcher, Representation, RepresentationMetadata, RepresentationPreferences, ResourceIdentifier, ResourceStore } from "@solid/community-server";
+import { LDES, RDF } from "@treecg/types";
+import { readFileSync } from "fs";
 import { Parser } from "n3";
 import { DataFactory } from "rdf-data-factory";
 import { Fetcher } from "./Fetcher";
@@ -14,18 +16,7 @@ export type SparqlFragment = {
 
 const datafactory = new DataFactory();
 
-const ldesMetadata = `
-    @prefix tree: <https://w3id.org/tree#>.
-    @prefix ldes: <https://w3id.org/ldes#>.
-    @prefix prov:  <http://www.w3.org/ns/prov#generatedAtTime>.
-    @prefix ex: <http://www.example.com/ns#u>.
-
-    ex:C1 a ldes:EventStream ;
-        ldes:timestampPath prov:genAtTime ; 
-        tree:view <?page=1> .
-    `
-
-function ldesRelation(offset: number, generatedAtTime: string, base: string) {
+function ldesRelation(offset: number, generatedAtTime: string, base: string, relationType: string, treePath: string) {
     const quads = `
     @prefix tree: <https://w3id.org/tree#>.
     @prefix prov:  <http://www.w3.org/ns/prov#generatedAtTime>.
@@ -33,19 +24,14 @@ function ldesRelation(offset: number, generatedAtTime: string, base: string) {
 
     <> a tree:Node ;
     tree:relation[
-        a tree:GreaterThanRelation ;
-        tree:path prov:genAtTime ;
+        a <${relationType}> ;
+        tree:path <${treePath}> ;
         tree:node <./?page=${offset + 1}> ;
         tree:value "${generatedAtTime}"^^xsd:dateTime ;
     ].
     `
     const parser = new Parser({ baseIRI: base })
     return parser.parse(quads)
-}
-
-function filterFunction(quad: Quad): boolean {
-    const expectedPredicate = "http://www.w3.org/ns/prov#generatedAtTime"
-    return quad.predicate.value === expectedPredicate
 }
 
 function compareGeneratedAtTime(x: Quad_Object, y: Quad_Object): Quad_Object {
@@ -58,13 +44,40 @@ function compareGeneratedAtTime(x: Quad_Object, y: Quad_Object): Quad_Object {
 }
 
 export class SparqlStore implements ResourceStore {
+    host: string;
+
+    metadata: Quad[];
+    relationType: string;
+    timetampPath: string;
 
     fetcher: Fetcher;
     pageSize: number;
 
-    constructor(pageSize: number, url: string) {
+    constructor(pageSize: number, url: string, queryFileLocation: string, metadataLocation: string, relationType: string, host: string, path: string) {
         this.pageSize = pageSize;
-        this.fetcher = new Fetcher(url, this.pageSize)
+        this.host = host + path;
+
+        console.log("i am here", this.host, host, path)
+
+        const queryString = readFileSync(queryFileLocation).toString();
+        const metadataString = readFileSync(metadataLocation).toString();
+        const metadataQuads = new Parser().parse(metadataString);
+        const eventStreamSubject = metadataQuads.find(q => q.predicate.equals(RDF.terms.type) && q.object.equals(LDES.terms.EventStream))!.subject;
+
+        this.timetampPath = metadataQuads.find(q => q.subject.equals(eventStreamSubject) && q.predicate.equals(LDES.terms.timestampPath))!.object.value;
+
+        this.metadata = metadataQuads.map(q => {
+            if (q.subject.equals(eventStreamSubject)) {
+                return datafactory.quad(datafactory.namedNode(host + path), q.predicate, q.object, q.graph);
+            } else {
+                return q
+            }
+        });
+
+
+        this.relationType = relationType;
+
+        this.fetcher = new Fetcher(url, this.pageSize, queryString)
     }
 
     getRepresentation = async (identifier: ResourceIdentifier, preferences: RepresentationPreferences, conditions?: Conditions): Promise<Representation> => {
@@ -74,8 +87,8 @@ export class SparqlStore implements ResourceStore {
         let quads
         if (page) {
             quads = await this.fetcher.fetch(parseInt(page) * this.pageSize);
-            const maxTimeObject = quads.filter(filterFunction).map(x => x.object).reduce(compareGeneratedAtTime);
-            const relationQuads = ldesRelation(parseInt(page), maxTimeObject.value, identifier.path);
+            const maxTimeObject = quads.filter(q => q.predicate.value === this.timetampPath).map(x => x.object).reduce(compareGeneratedAtTime);
+            const relationQuads = ldesRelation(parseInt(page), maxTimeObject.value, identifier.path, this.relationType, this.timetampPath);
 
             const memberquads = [];
             const doneMember = new Set();
@@ -83,7 +96,7 @@ export class SparqlStore implements ResourceStore {
                 if (!doneMember.has(member.subject.value)) {
                     doneMember.add(member.subject.value);
                     memberquads.push(datafactory.quad(
-                        datafactory.namedNode("http://www.example.com/ns#C1"),
+                        datafactory.namedNode(this.host),
                         datafactory.namedNode("https://w3id.org/tree#member"),
                         member.subject
                     ));
@@ -92,10 +105,11 @@ export class SparqlStore implements ResourceStore {
 
             quads.push(...relationQuads);
             quads.push(...memberquads);
+
         } else {
-            const parser = new Parser()
-            quads = parser.parse(ldesMetadata)
+            quads = this.metadata;
         }
+
         return new BasicRepresentation(
             guardedStreamFrom(quads),
             new RepresentationMetadata({ [CONTENT_TYPE]: INTERNAL_QUADS })
@@ -121,6 +135,5 @@ export class SparqlStore implements ResourceStore {
     hasResource = async (identifier: ResourceIdentifier): Promise<boolean> => {
         return true;
     }
-
 }
 

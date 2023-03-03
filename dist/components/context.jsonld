@@ -13,6 +13,33 @@
           },
           "url": {
             "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_url"
+          },
+          "queryFileLocation": {
+            "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_queryFileLocation"
+          },
+          "metadataLocation": {
+            "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_metadataLocation"
+          },
+          "relationType": {
+            "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_relationType"
+          },
+          "host": {
+            "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_host"
+          },
+          "path": {
+            "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_path"
+          },
+          "ize": {
+            "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_pageSize"
+          },
+          "FileLocation": {
+            "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_queryFileLocation"
+          },
+          "ataLocation": {
+            "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_metadataLocation"
+          },
+          "ionType": {
+            "@id": "sss:dist/sparqlstore.jsonld#SparqlStore_relationType"
           }
         }
       }
